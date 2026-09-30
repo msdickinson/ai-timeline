@@ -274,9 +274,18 @@ const KNOWN_SOURCES: KnownSource[] = [
 type SortField = "date" | "source" | "duration" | "toolCalls" | "tokens";
 type SortDir = "asc" | "desc";
 
-// Built-in sample: a real Claude Code session on a small demo repo, plus its subagent.
-const SAMPLE_SESSION = "claude-code-demo/aac96bcf-5a48-4184-b7d4-679f8875941d.jsonl";
-const SAMPLE_SUBAGENT = "claude-code-demo/aac96bcf-5a48-4184-b7d4-679f8875941d/subagents/agent-ade35443be060e82d.jsonl";
+// Built-in sample: a real Claude Code session on a small demo repo, where a lead
+// agent runs a team of seven subagents in two parallel waves.
+const SAMPLE_FILES = [
+  "claude-code-team/0ab68ee4-fb82-4ed5-b636-7de167fb79ba.jsonl",
+  "claude-code-team/0ab68ee4-fb82-4ed5-b636-7de167fb79ba/subagents/agent-a194527f16aa7a6cf.jsonl",
+  "claude-code-team/0ab68ee4-fb82-4ed5-b636-7de167fb79ba/subagents/agent-a24a36eb40a98202e.jsonl",
+  "claude-code-team/0ab68ee4-fb82-4ed5-b636-7de167fb79ba/subagents/agent-a3085f2974f6f2cfe.jsonl",
+  "claude-code-team/0ab68ee4-fb82-4ed5-b636-7de167fb79ba/subagents/agent-a7cd025772caa205d.jsonl",
+  "claude-code-team/0ab68ee4-fb82-4ed5-b636-7de167fb79ba/subagents/agent-a9c5512c9a96cf814.jsonl",
+  "claude-code-team/0ab68ee4-fb82-4ed5-b636-7de167fb79ba/subagents/agent-aaafb47e3e4c65fd1.jsonl",
+  "claude-code-team/0ab68ee4-fb82-4ed5-b636-7de167fb79ba/subagents/agent-ac30a08a180ff68e4.jsonl",
+];
 
 const PAGE_SIZE = 100;
 
@@ -2979,13 +2988,23 @@ function renderSourcePicker(): HTMLElement {
     try {
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 10000); // 10s timeout
-      // The sample is one session plus the subagent it spawned, laid out the
+      // The sample is one session plus the subagents it spawned, laid out the
       // way Claude Code saves them, so it merges exactly like a folder load.
-      const files = [SAMPLE_SESSION, SAMPLE_SUBAGENT];
+      const files = SAMPLE_FILES;
       const texts = await Promise.all(files.map(async (f) => {
         const resp = await fetch(`./samples/${f}`, { signal: controller.signal });
         if (!resp.ok) throw new Error("Sample not found");
         return resp.text();
+      }));
+      // Each subagent's .meta.json holds its task description, used as its lane name.
+      await Promise.all(files.map(async (f) => {
+        const m = f.match(/subagents\/agent-([a-z0-9-]+)\.jsonl$/i);
+        if (!m) return;
+        try {
+          const resp = await fetch(`./samples/${f.replace(/\.jsonl$/, ".meta.json")}`, { signal: controller.signal });
+          const meta = resp.ok ? await resp.json() : null;
+          if (meta?.description) agentMetaDescriptions.set(m[1], meta.description);
+        } catch {}
       }));
       clearTimeout(timeout);
       const parsed = mergeSubagentTrajectories(

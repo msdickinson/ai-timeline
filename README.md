@@ -8,7 +8,7 @@
 **Your AI coding sessions are already saved on your machine. This shows you what's in them.**
 
 <p align="center">
-  <a href="https://msdickinson.github.io/ai-timeline/"><img alt="AI Timeline dashboard showing the built-in sample: a Claude Code session and its subagent" src="assets/hero.png" width="820"/></a>
+  <a href="https://msdickinson.github.io/ai-timeline/"><img alt="AI Timeline dashboard showing the built-in sample: a Claude Code session with a team of subagents" src="assets/hero.png" width="820"/></a>
 </p>
 
 Every time you use Claude Code, Cursor, Aider, or Copilot — it saves a full record of everything that happened. Every tool call, every token spent, every file it read, every error it hit. It's all sitting in a folder on your machine right now. You've probably never looked at it.
@@ -167,7 +167,7 @@ CI runs all three on every push (`.github/workflows/ci.yml`).
 
 - **VETT** (not yet public) — an AI coding agent harness that runs models against SWE-bench-style tasks. AI Timeline's live source reads its `--live-port` SSE stream and per-instance JSONL events.
 
-The built-in sample is a real Claude Code session on a small demo repo (`/home/dev/demo-todo`), recorded for this purpose: one request, a review subagent, and the follow-up work.
+The built-in sample is a real Claude Code session on a small demo repo (`/home/dev/demo-todo`), recorded for this purpose: a lead agent runs a team of seven subagents (features, CLI, tests, docs and two reviewers) in two parallel waves, then fixes what they found.
 
 ## Contributing
 
