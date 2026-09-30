@@ -9,9 +9,9 @@ import {
 /**
  * Parser for Vett benchmark run exports.
  *
- * Vett (https://github.com/MarkDickinsonBros/vett) is a lean benchmark
- * harness for AI coding agents. Each run produces a single JSON file
- * containing a RunResult with one or more InstanceResults inside.
+ * VETT, an agent harness, is a lean benchmark runner for AI coding agents.
+ * Each run produces a single JSON file containing a RunResult with one or
+ * more InstanceResults inside.
  *
  * File pattern: results/{suite}_{profile}_{timestamp}.json
  *

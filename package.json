@@ -20,7 +20,7 @@
     "viewer"
   ],
   "scripts": {
-    "dev": "vite src/web",
+    "dev": "vite src/web --config vite.config.ts",
     "build": "vite build src/web --outDir ../../dist/web --config vite.config.ts && node scripts/copy-public.mjs",
     "build:ext": "node esbuild.ext.mjs",
     "test": "vitest run",

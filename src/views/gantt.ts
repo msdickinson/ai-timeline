@@ -1,6 +1,6 @@
 /**
  * Gantt View — full-featured execution timeline.
- * Modeled after TicketForge's processing breakdown.
+ * Modeled after a typical benchmark harness's processing breakdown.
  *
  * Features:
  * - Swimlane rows by activity type (AI responses, tool calls, thinking)
@@ -2268,7 +2268,7 @@ function renderDetailPanel(entry: TimelineEntry, s: GanttState): HTMLElement {
     body.appendChild(contextContainer);
   }
 
-  // ── Always show 3 messages matching TicketForge pattern ──
+  // ── Always show 3 messages matching the standard pattern ──
   // For tool_call:  RESPONSE (AI text) → tool call args → TOOL result [NEW]
   // For ai_call:    RESPONSE [NEW] (AI text) → tool call preview (if next is tool)
   // For thinking:   THINKING content

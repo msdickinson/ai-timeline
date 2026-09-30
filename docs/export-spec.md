@@ -17,7 +17,7 @@ When the Producer clicks Export, they get a config modal:
 
 ### Benchmark Metadata (Optional)
 - **Benchmark name** — e.g., "SWE-bench Verified Q2 2026"
-- **Harness** — e.g., "TicketForge", "OpenHands", "SWE-Agent"
+- **Harness** — e.g., "OpenHands", "SWE-Agent", "Aider"
 - **Per-session results** — pass/fail/error status, mapped to verification results
 - **Instance mapping** — tie session IDs to benchmark instance IDs (e.g., "django__django-15277")
 - **Notes** — freeform text per session or for the overall export
@@ -64,13 +64,13 @@ Acceptable for sharing. GitHub can render files up to 10MB in browser; larger fi
 
 ## Benchmark Integration
 
-For TicketForge and other harnesses that run N instances:
+For harnesses that run N instances:
 
 ### Benchmark Run Model
 ```typescript
 interface BenchmarkRun {
   name: string;           // "SWE-bench Verified Run 1074"
-  harness: string;        // "TicketForge" | "OpenHands" | "SWE-Agent"
+  harness: string;        // "OpenHands" | "SWE-Agent" | "Aider"
   date: string;           // ISO date
   config?: Record<string, unknown>; // model, temperature, etc.
   instances: BenchmarkInstance[];
@@ -88,7 +88,7 @@ interface BenchmarkInstance {
 
 ### How it appears in the UI
 - Dashboard shows pass/fail rate, per-instance table with status badges
-- Gantt shows instance ID as swimlane group header (like TicketForge's ticket tabs)
+- Gantt shows instance ID as swimlane group header (like a benchmark harness's per-instance tabs)
 - Filter by status: All | Passed | Failed | Error
 - Click instance → see that session's full trajectory
 

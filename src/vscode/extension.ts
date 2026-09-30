@@ -205,7 +205,7 @@ interface BenchmarkInstance {
 
 interface BenchmarkRun {
   name: string;          // Display name
-  source: string;        // "SWE-agent" | "OpenHands" | "TicketForge" | folder name
+  source: string;        // "SWE-agent" | "OpenHands" | "Custom" | folder name
   folderPath: string;
   loadedAt: number;
   instances: BenchmarkInstance[];
@@ -227,9 +227,10 @@ function parseBenchmarkFolder(folderPath: string): BenchmarkRun | null {
     const ohRun = tryOpenHands(folderPath);
     if (ohRun) return ohRun;
 
-    // Try TicketForge JSON/JSONL export
-    const tfRun = tryTicketForgeExport(folderPath);
-    if (tfRun) return tfRun;
+    // Try generic JSON/JSONL export (any harness that emits an
+    // { instances: [...] } summary, or one JSON object per line)
+    const genericRun = tryGenericInstancesExport(folderPath);
+    if (genericRun) return genericRun;
 
     // Fallback: just list trajectory files
     return tryGenericTrajectories(folderPath);
@@ -536,7 +537,14 @@ function tryOpenHands(folderPath: string): BenchmarkRun | null {
   };
 }
 
-function tryTicketForgeExport(folderPath: string): BenchmarkRun | null {
+/**
+ * Generic instances-array export: a folder containing either
+ *   - a JSON file shaped like { suite, runId, instances: [...] }, or
+ *   - a JSONL file with one instance object per line (instanceId required)
+ * This is a schema, not a specific tool's format — any harness that emits
+ * one of these two shapes is picked up here.
+ */
+function tryGenericInstancesExport(folderPath: string): BenchmarkRun | null {
   const entries = fs.readdirSync(folderPath);
 
   // JSON with { suite, instances: [...] }
@@ -566,7 +574,7 @@ function tryTicketForgeExport(folderPath: string): BenchmarkRun | null {
         });
         return {
           name: data.suite ? `${data.suite} #${data.runId || ""}` : path.basename(entry, ".json"),
-          source: "TicketForge",
+          source: "Custom",
           folderPath,
           loadedAt: Date.now(),
           instances,
@@ -601,7 +609,7 @@ function tryTicketForgeExport(folderPath: string): BenchmarkRun | null {
         } catch {}
       }
       if (instances.length > 0) {
-        return { name: path.basename(entry, ".jsonl"), source: "TicketForge", folderPath, loadedAt: Date.now(), instances };
+        return { name: path.basename(entry, ".jsonl"), source: "Custom", folderPath, loadedAt: Date.now(), instances };
       }
     } catch {}
   }
@@ -1972,7 +1980,7 @@ export function activate(context: vscode.ExtensionContext) {
     if (!run) {
       vscode.window.showWarningMessage(
         "No benchmark data found. Expected: SWE-agent (<instance>/trajectories/agent.traj), " +
-        "OpenHands (<instance>/trajectories/trajectory.json), or TicketForge export (.json/.jsonl with instances array)."
+        "OpenHands (<instance>/trajectories/trajectory.json), or a custom export (.json/.jsonl with instances array)."
       );
       return;
     }

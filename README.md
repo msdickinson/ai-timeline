@@ -97,7 +97,7 @@ Plugin architecture — parsers and views are drop-in modules.
 ```
 src/
   parsers/     — 11 parser plugins (one per format)
-  views/       — 22 view plugins
+  views/       — 10 registered view plugins (13 more are unfinished prototypes kept on disk, not registered)
   plugins.ts   — One import = one plugin
   common/      — Shared types and registry
 tests/         — 1,000+ tests across 29 files

@@ -580,7 +580,10 @@ export function initApp(root: HTMLElement) {
     }
     // After the initial render is wired, probe known live sources so the
     // banner / auto-connect can fire without blocking first paint.
-    void discoverLiveSourcesOnOpen();
+    // Only when the user has explicitly turned live mode on (Settings
+    // toggle, or previously starting a live source) — a default cold load
+    // must issue zero network requests to any live-source host.
+    if (getLiveModeEnabled()) void discoverLiveSourcesOnOpen();
   });
 }
 
@@ -1090,7 +1093,26 @@ const LIVE_LS = {
   vettPort: "tv-live-vett-port",
   autoConnect: "tv-live-auto-connect",
   dismissedDiscovery: "tv-live-dismissed-discovery", // session-scoped (we use sessionStorage)
+  liveModeEnabled: "tv-live-mode-enabled",
 };
+
+/**
+ * Live mode is OFF by default. Until the user explicitly opts in (the
+ * Settings toggle, or by starting a live source through the "Connect to a
+ * live source…" action), a cold load must make ZERO network requests to
+ * any live-source host — no healthz probing, nothing. Once opted in, we
+ * probe known targets on every app open so reconnects/discovery work.
+ */
+function getLiveModeEnabled(): boolean {
+  try { return localStorage.getItem(LIVE_LS.liveModeEnabled) === "1"; } catch { return false; }
+}
+
+function setLiveModeEnabled(on: boolean) {
+  try {
+    if (on) localStorage.setItem(LIVE_LS.liveModeEnabled, "1");
+    else localStorage.removeItem(LIVE_LS.liveModeEnabled);
+  } catch { /* ignore */ }
+}
 
 function getLastVettTarget(): { host: string; port: number } | null {
   try {
@@ -1152,6 +1174,9 @@ async function probeVettHealthz(host: string, port: number, timeoutMs = 1200): P
  * dismissible discovery banner with one-click connect.
  */
 async function discoverLiveSourcesOnOpen() {
+  // Defense in depth: never probe unless the user has opted into live mode,
+  // even if this function is ever called from a new code path.
+  if (!getLiveModeEnabled()) return;
   // Don't probe if vett-live is already connected.
   if (state.liveSources.has("vett-live")) return;
 
@@ -1223,6 +1248,12 @@ function mergeLiveTrajectories(incoming: Trajectory[]) {
 }
 
 function startLiveSource(sourceId: string, config: Record<string, unknown>) {
+  // Actually starting a live source IS the explicit "live-mode UI action" —
+  // flip the persisted opt-in so future app opens are allowed to probe for
+  // reconnect/discovery. (Independent of the Settings toggle, which is the
+  // other way to opt in up front.)
+  setLiveModeEnabled(true);
+
   // Replace if same id is already running; leave other sources alone.
   const prior = state.liveSources.get(sourceId);
   if (prior) {
@@ -1633,7 +1664,7 @@ function openExportModal() {
   harnessInput.type = "text";
   harnessInput.className = "tv-modal-source-name";
   harnessInput.style.width = "100%";
-  harnessInput.placeholder = "e.g., TicketForge, OpenHands, SWE-Agent";
+  harnessInput.placeholder = "e.g., OpenHands, SWE-Agent, Aider";
   const harnessRow = el("div", "tv-modal-row");
   harnessRow.innerHTML = "<span>Harness</span>";
   harnessRow.appendChild(harnessInput);
@@ -2350,6 +2381,47 @@ function openSettingsModal() {
   generalSection.appendChild(costRow);
 
   body.appendChild(generalSection);
+
+  // ── Live Sources Section ──
+  // Off by default: a cold app open must make zero network requests to any
+  // live-source host. The user has to explicitly opt in here (or by using
+  // "Connect to a live source…" below, which opts in for them) before we
+  // probe for a running VETT server / auto-reconnect on future opens.
+  if (!consumerPkg) {
+    const liveSection = el("div", "tv-modal-section");
+    liveSection.innerHTML = `<h3>Live Sources</h3><p class="tv-modal-hint">Stream a running session (VETT <code>--live-port</code>, etc.) instead of loading a static file. Off by default — no network requests until you turn this on.</p>`;
+
+    const liveModeRow = el("div", "tv-modal-row");
+    liveModeRow.innerHTML = `
+      <label>
+        <span class="tv-modal-label">Live mode</span>
+        <span class="tv-modal-hint">When on, probe known live-source targets (e.g. localhost:5151) on app open, so reconnect/discovery works automatically.</span>
+      </label>
+    `;
+    const liveModeToggle = document.createElement("input");
+    liveModeToggle.type = "checkbox";
+    liveModeToggle.checked = getLiveModeEnabled();
+    liveModeToggle.setAttribute("aria-label", "Enable live mode");
+    liveModeToggle.onchange = () => {
+      setLiveModeEnabled(liveModeToggle.checked);
+      if (liveModeToggle.checked) void discoverLiveSourcesOnOpen();
+    };
+    liveModeRow.appendChild(liveModeToggle);
+    liveSection.appendChild(liveModeRow);
+
+    const liveConnectRow = el("div", "tv-modal-row");
+    const liveConnectBtn = document.createElement("button");
+    liveConnectBtn.className = "tv-btn";
+    liveConnectBtn.textContent = "Connect to a live source…";
+    liveConnectBtn.onclick = () => {
+      overlay.remove();
+      openLiveSourceModal();
+    };
+    liveConnectRow.appendChild(liveConnectBtn);
+    liveSection.appendChild(liveConnectRow);
+
+    body.appendChild(liveSection);
+  }
 
   // ── Views Section ──
   const viewsSection = el("div", "tv-modal-section");
@@ -3533,7 +3605,11 @@ function renderDetail(): HTMLElement {
       moreBtn.onclick = (e) => {
         e.stopPropagation();
         const existing = document.querySelector(".tv-more-dropdown");
-        if (existing) { existing.remove(); return; }
+        if (existing) {
+          existing.remove();
+          moreBtn.setAttribute("aria-expanded", "false");
+          return;
+        }
 
         const dropdown = el("div", "tv-more-dropdown");
 
@@ -3578,9 +3654,11 @@ function renderDetail(): HTMLElement {
         }
 
         moreWrap.appendChild(dropdown);
+        moreBtn.setAttribute("aria-expanded", "true");
         setTimeout(() => {
           document.addEventListener("click", function closer() {
             dropdown.remove();
+            moreBtn.setAttribute("aria-expanded", "false");
             document.removeEventListener("click", closer);
           });
         }, 0);

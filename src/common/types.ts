@@ -29,7 +29,7 @@ export interface Trajectory {
    * in exactly one trajectory's `toolUseUuids`, and that trajectory is the
    * real parent that spawned it. */
   toolUseUuids?: string[];
-  /** Test results from build/test execution (e.g., TicketForge verification) */
+  /** Test results from build/test execution (e.g., CI verification) */
   testResults?: TestResults;
   /** AI-generated analysis — structured review of the session (why it passed/failed) */
   analysis?: SessionAnalysis;
@@ -156,7 +156,7 @@ export interface SessionInfo {
   metadata?: Record<string, unknown>;
 }
 
-/** Agent/team member info — supports TicketForge multi-agent workflows */
+/** Agent/team member info — supports multi-agent workflows */
 export interface AgentInfo {
   name: string;
   role?: string;
@@ -198,7 +198,7 @@ export interface TrajectoryEvent {
   durationMs?: number;
   /** Agent/team member who produced this event (multi-agent support) */
   agent?: string;
-  /** Whether context compaction was triggered (TicketForge) */
+  /** Whether context compaction was triggered */
   contextCompacted?: boolean;
   /** Stage in the pipeline: queue, processing, verify, etc. */
   stage?: string;

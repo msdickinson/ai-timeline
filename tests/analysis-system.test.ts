@@ -169,7 +169,7 @@ describe("BenchmarkRun — Full Structure", () => {
   it("should support a complete benchmark run with instances", () => {
     const run: BenchmarkRun = {
       name: "SWE-bench Verified Q2 2026",
-      harness: "TicketForge",
+      harness: "CustomHarness",
       date: "2026-04-04T00:00:00Z",
       config: { model: "claude-opus-4-6", temperature: 1.0, maxIterations: 100 },
       instances: [
@@ -220,13 +220,13 @@ describe("ExportPackage — Full Structure", () => {
     const pkg: ExportPackage = {
       version: "1.0",
       exportedAt: "2026-04-04T02:00:00Z",
-      title: "SWE-bench Results - TicketForge v2.1",
+      title: "SWE-bench Results - CustomHarness v2.1",
       enabledViews: ["dashboard", "gantt", "benchmark", "analysis", "test-results", "findings"],
       showSidebar: true,
       trajectories: trajs,
       benchmark: {
         name: "SWE-bench Verified",
-        harness: "TicketForge",
+        harness: "CustomHarness",
         date: "2026-04-04T00:00:00Z",
         instances: [
           { instanceId: "django-15277", sessionId: "sess-001", status: "passed" },

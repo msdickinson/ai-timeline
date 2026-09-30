@@ -1,6 +1,6 @@
 /**
  * Test Results View — shows unit test pass/fail from the session.
- * TicketForge stores full test output; other tools may have partial data
+ * Some harnesses store full test output; other tools may have partial data
  * from tool_result events that contain test output.
  */
 
