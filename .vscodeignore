@@ -12,3 +12,12 @@ esbuild.ext.mjs
 package.json.bak
 .vscodeignore
 CONTRIBUTING.md
+package.json.web.bak
+*.map
+scripts
+.github
+public
+DEPLOY.md
+vscode-package.json
+.gitignore
+*.vsix
