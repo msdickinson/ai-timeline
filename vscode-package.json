@@ -1,0 +1,147 @@
+{
+  "name": "ai-timeline",
+  "displayName": "AI Timeline",
+  "description": "See what your AI coding tools actually did — timeline, insights, and session comparison for Claude Code, Cursor, Aider, SWE-agent, and more",
+  "version": "0.1.0",
+  "publisher": "dickinsonbros",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": ["Visualization", "Other"],
+  "keywords": [
+    "ai", "trajectory", "claude", "cursor", "aider", "cline",
+    "openhands", "swe-agent", "swe-bench", "coding-agent", "diagnostics"
+  ],
+  "activationEvents": [
+    "onView:aiTimeline.sessions"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "ai-timeline",
+          "title": "AI Timeline",
+          "icon": "$(graph-line)"
+        }
+      ]
+    },
+    "views": {
+      "ai-timeline": [
+        {
+          "id": "aiTimeline.sessions",
+          "name": "Sessions",
+          "type": "tree"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "aiTimeline.open",
+        "title": "AI Timeline: Open Viewer"
+      },
+      {
+        "command": "aiTimeline.openFolder",
+        "title": "AI Timeline: Open Folder"
+      },
+      {
+        "command": "aiTimeline.openFile",
+        "title": "Open in AI Timeline"
+      },
+      {
+        "command": "aiTimeline.refresh",
+        "title": "AI Timeline: Refresh Sessions",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "aiTimeline.openSession",
+        "title": "Open Session"
+      },
+      {
+        "command": "aiTimeline.export",
+        "title": "AI Timeline: Share / Export",
+        "icon": "$(cloud-download)"
+      },
+      {
+        "command": "aiTimeline.filter",
+        "title": "AI Timeline: Filter Sources",
+        "icon": "$(filter)"
+      },
+      {
+        "command": "aiTimeline.compare",
+        "title": "AI Timeline: Compare Sessions",
+        "icon": "$(split-horizontal)"
+      },
+      {
+        "command": "aiTimeline.toggleDisplay",
+        "title": "AI Timeline: Toggle Prompt Preview"
+      },
+      {
+        "command": "aiTimeline.find",
+        "title": "AI Timeline: Search Sessions",
+        "icon": "$(search)"
+      },
+      {
+        "command": "aiTimeline.deepSearch",
+        "title": "AI Timeline: Deep Search (Full Content)"
+      },
+      {
+        "command": "aiTimeline.loadBenchmark",
+        "title": "AI Timeline: Load Benchmark Run",
+        "icon": "$(beaker)"
+      },
+      {
+        "command": "aiTimeline.openBenchmarkRun",
+        "title": "AI Timeline: Open Benchmark Run"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "aiTimeline.find",
+          "when": "view == aiTimeline.sessions",
+          "group": "navigation"
+        },
+        {
+          "command": "aiTimeline.compare",
+          "when": "view == aiTimeline.sessions",
+          "group": "navigation"
+        },
+        {
+          "command": "aiTimeline.filter",
+          "when": "view == aiTimeline.sessions",
+          "group": "navigation"
+        },
+        {
+          "command": "aiTimeline.refresh",
+          "when": "view == aiTimeline.sessions",
+          "group": "navigation"
+        },
+        {
+          "command": "aiTimeline.export",
+          "when": "view == aiTimeline.sessions"
+        },
+        {
+          "command": "aiTimeline.openFolder",
+          "when": "view == aiTimeline.sessions"
+        },
+        {
+          "command": "aiTimeline.toggleDisplay",
+          "when": "view == aiTimeline.sessions"
+        }
+      ],
+      "explorer/context": [
+        {
+          "when": "resourceExtname == .jsonl || resourceExtname == .traj || resourceExtname == .json",
+          "command": "aiTimeline.openFile",
+          "group": "navigation"
+        }
+      ]
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/msdickinson/ai-timeline"
+  }
+}

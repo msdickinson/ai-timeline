@@ -1,0 +1,46 @@
+{
+  "instance_id": "sympy__sympy-23456",
+  "info": {
+    "model": "gpt-4",
+    "exit_status": "submitted",
+    "submission": "diff --git a/sympy/core/basic.py b/sympy/core/basic.py\n...",
+    "model_stats": {
+      "instance_cost": 0.15,
+      "tokens_sent": 25000,
+      "tokens_received": 3000,
+      "api_calls": 8
+    }
+  },
+  "trajectory": [
+    {
+      "thought": "I need to understand the issue with sympy's Basic class",
+      "action": "bash\nfind /repo -name 'basic.py' -path '*/core/*'",
+      "observation": "/repo/sympy/core/basic.py",
+      "state": "running"
+    },
+    {
+      "thought": "Let me read the relevant section",
+      "action": "open /repo/sympy/core/basic.py",
+      "observation": "class Basic:\n    def __new__(cls, *args):\n        obj = object.__new__(cls)\n        obj._args = args\n        return obj",
+      "state": "running"
+    },
+    {
+      "thought": "I see the issue. The _args tuple isn't being validated.",
+      "action": "edit /repo/sympy/core/basic.py\n--- old\n+++ new\n@@ -3,3 +3,4 @@\n     def __new__(cls, *args):\n         obj = object.__new__(cls)\n+        args = tuple(args)  # ensure tuple\n         obj._args = args",
+      "observation": "File edited successfully.",
+      "state": "running"
+    },
+    {
+      "thought": "Run the tests to verify the fix",
+      "action": "bash\ncd /repo && python -m pytest sympy/core/tests/test_basic.py -x -q",
+      "observation": "23 passed in 4.5s",
+      "state": "running"
+    },
+    {
+      "thought": "All tests pass. Submitting.",
+      "action": "submit",
+      "observation": "Submission recorded.",
+      "state": "submitted"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "conversationId": "amazonq-conv-12345",
+  "model": "anthropic.claude-sonnet",
+  "created": "2026-03-20T09:00:00.000Z",
+  "messages": [
+    {"role": "user", "content": "What's in the current directory?", "timestamp": "2026-03-20T09:00:01.000Z"},
+    {"role": "assistant", "content": "Let me check the directory contents.", "timestamp": "2026-03-20T09:00:02.000Z", "toolUse": {"toolUseId": "tu_1", "name": "bash", "input": {"command": "ls -la"}}},
+    {"role": "user", "timestamp": "2026-03-20T09:00:04.000Z", "toolResult": {"toolUseId": "tu_1", "content": "total 24\ndrwxr-xr-x  5 user user 4096 Mar 20 09:00 .\n-rw-r--r--  1 user user  256 Mar 20 08:55 package.json\n-rw-r--r--  1 user user 1024 Mar 20 08:50 index.ts", "status": "success"}},
+    {"role": "assistant", "content": "The directory contains a package.json and index.ts file. This looks like a Node.js project.", "timestamp": "2026-03-20T09:00:05.000Z"},
+    {"role": "user", "content": "Show me the package.json", "timestamp": "2026-03-20T09:00:10.000Z"},
+    {"role": "assistant", "content": "Reading the file now.", "timestamp": "2026-03-20T09:00:11.000Z", "toolUse": {"toolUseId": "tu_2", "name": "readFile", "input": {"path": "package.json"}}},
+    {"role": "user", "timestamp": "2026-03-20T09:00:12.000Z", "toolResult": {"toolUseId": "tu_2", "content": "{\n  \"name\": \"my-project\",\n  \"version\": \"1.0.0\",\n  \"scripts\": { \"start\": \"ts-node index.ts\" }\n}", "status": "success"}},
+    {"role": "assistant", "content": "It's a TypeScript project called 'my-project' with a start script that runs index.ts via ts-node.", "timestamp": "2026-03-20T09:00:13.000Z"}
+  ]
+}

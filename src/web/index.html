@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#4f8ff7">
+  <meta name="description" content="Your AI coding sessions are already saved on your machine. This shows you what's in them. Timelines, token breakdowns, tool call patterns. Works with Claude Code, Cursor, Aider, Copilot, and more. Free, offline, open source.">
+  <meta property="og:title" content="AI Timeline — Your AI sessions are already saved. See what's in them.">
+  <meta property="og:description" content="Every time you use Claude Code, Cursor, or Aider, it saves everything locally. AI Timeline shows you what your AI actually did — timelines, tokens, patterns. Free, offline, no install.">
+  <meta property="og:type" content="website">
+  <title>AI Timeline — See what your AI coding tool actually did</title>
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%234f8ff7' width='100' height='100' rx='20'/><rect fill='white' x='15' y='28' width='52' height='10' rx='5'/><rect fill='white' x='25' y='45' width='60' height='10' rx='5'/><rect fill='white' x='18' y='62' width='35' height='10' rx='5'/></svg>">
+</head>
+<body>
+  <div id="app"></div>
+  <script type="module">
+    import { initApp } from './app.ts';
+    initApp(document.getElementById('app'));
+
+    // Register service worker for PWA install + offline
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register("./sw.js").catch(() => {});
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+{
+  "name": "ai-timeline",
+  "version": "0.1.0",
+  "description": "Offline diagnostics viewer for AI coding tool sessions. Supports Claude Code, OpenHands, and SWE-Agent trajectories.",
+  "license": "MIT",
+  "author": "Mark Dickinson <mark@dickinsonbros.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/msdickinson/ai-timeline"
+  },
+  "keywords": [
+    "ai",
+    "coding",
+    "diagnostics",
+    "trajectory",
+    "swe-bench",
+    "claude-code",
+    "openhands",
+    "swe-agent",
+    "viewer"
+  ],
+  "scripts": {
+    "dev": "vite src/web",
+    "build": "vite build src/web --outDir ../../dist/web --config vite.config.ts && node scripts/copy-public.mjs",
+    "build:ext": "node esbuild.ext.mjs",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "tsc --noEmit",
+    "package:ext": "node scripts/package-extension.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.3",
+    "@types/sql.js": "^1.4.11",
+    "@types/vscode": "^1.90.0",
+    "esbuild": "^0.21.0",
+    "happy-dom": "^20.14.5",
+    "typescript": "^5.4.0",
+    "vite": "^6.4.2",
+    "vitest": "^2.0.0"
+  },
+  "dependencies": {
+    "morphdom": "^2.7.8",
+    "sql.js": "^1.14.1"
+  }
+}

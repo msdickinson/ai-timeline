@@ -1,0 +1,15 @@
+{"seq":1,"ts":"2026-04-25T20:50:44.123Z","type":"run_start","instance_id":null,"data":{"run_id":"vett-25-dual2","instance_count":2}}
+{"seq":2,"ts":"2026-04-25T20:50:44.456Z","type":"instance_start","instance_id":"django__django-15987","data":{"instance_id":"django__django-15987"}}
+{"seq":3,"ts":"2026-04-25T20:50:44.500Z","type":"instance_start","instance_id":"sympy__sympy-16886","data":{"instance_id":"sympy__sympy-16886"}}
+{"seq":4,"ts":"2026-04-25T20:50:55.111Z","type":"iteration_start","instance_id":"django__django-15987","data":{"iteration":1}}
+{"seq":5,"ts":"2026-04-25T20:50:58.234Z","type":"llm_response","instance_id":"django__django-15987","data":{"iteration":1,"input_tokens":12500,"output_tokens":234}}
+{"seq":6,"ts":"2026-04-25T20:50:58.500Z","type":"tool_call_start","instance_id":"django__django-15987","data":{"tool_name":"terminal","call_id":"call-1"}}
+{"seq":7,"ts":"2026-04-25T20:50:59.812Z","type":"tool_call_end","instance_id":"django__django-15987","data":{"tool_name":"terminal","call_id":"call-1","success":true,"duration_ms":1312,"result_preview":"[exit code: 0]\n[cwd: /testbed]\n..."}}
+{"seq":8,"ts":"2026-04-25T20:51:01.000Z","type":"iteration_end","instance_id":"django__django-15987","data":{"iteration":1}}
+{"seq":9,"ts":"2026-04-25T20:51:02.111Z","type":"llm_response","instance_id":"sympy__sympy-16886","data":{"iteration":1,"input_tokens":11800,"output_tokens":410}}
+{"seq":10,"ts":"2026-04-25T20:51:02.500Z","type":"tool_call_start","instance_id":"sympy__sympy-16886","data":{"tool_name":"file_editor","call_id":"call-2"}}
+{"seq":11,"ts":"2026-04-25T20:51:03.103Z","type":"tool_call_end","instance_id":"sympy__sympy-16886","data":{"tool_name":"file_editor","call_id":"call-2","success":false,"duration_ms":603,"result_preview":"Error: file not found: /testbed/foo.py"}}
+{"seq":12,"ts":"2026-04-25T20:55:30.999Z","type":"session_recovery","instance_id":"django__django-15987","data":{"iteration":12,"reason":"consecutive_terminal_failures"}}
+{"seq":13,"ts":"2026-04-25T21:02:11.500Z","type":"instance_end","instance_id":"django__django-15987","data":{"instance_id":"django__django-15987","end_reason":"finish_tool"}}
+{"seq":14,"ts":"2026-04-25T21:03:45.111Z","type":"instance_end","instance_id":"sympy__sympy-16886","data":{"instance_id":"sympy__sympy-16886","end_reason":"max_iterations"}}
+{"seq":15,"ts":"2026-04-25T21:03:45.500Z","type":"run_end","instance_id":null,"data":{"completed":2,"errored":0}}

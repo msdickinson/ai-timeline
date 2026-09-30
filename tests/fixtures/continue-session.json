@@ -1,0 +1,56 @@
+{
+  "title": "Fix CSS layout issue",
+  "sessionId": "continue-session-abc123",
+  "workspaceDirectory": "/home/user/project",
+  "dateCreated": "2026-03-20T10:00:00.000Z",
+  "history": [
+    {
+      "role": "user",
+      "content": "The sidebar is overlapping the main content on mobile. Fix it.",
+      "timestamp": 1710928800000
+    },
+    {
+      "role": "assistant",
+      "content": "Let me look at the CSS file to find the layout issue.",
+      "toolCalls": [
+        {
+          "id": "tc_1",
+          "function": {"name": "readFile", "arguments": "{\"filepath\": \"src/styles.css\"}"},
+          "type": "function"
+        }
+      ],
+      "timestamp": 1710928802000
+    },
+    {
+      "role": "tool",
+      "content": ".sidebar { position: fixed; width: 250px; }\n.main { margin-left: 250px; }\n@media (max-width: 768px) { .main { margin-left: 0; } }",
+      "name": "readFile",
+      "toolCallId": "tc_1",
+      "timestamp": 1710928803000
+    },
+    {
+      "role": "assistant",
+      "content": "I see the problem. On mobile, the margin is removed but the sidebar is still fixed at 250px wide, overlapping content. I'll fix it.",
+      "toolCalls": [
+        {
+          "id": "tc_2",
+          "function": {"name": "editFile", "arguments": "{\"filepath\": \"src/styles.css\", \"changes\": \"@media (max-width: 768px) { .sidebar { display: none; } .main { margin-left: 0; } }\"}"},
+          "type": "function"
+        }
+      ],
+      "timestamp": 1710928806000
+    },
+    {
+      "role": "tool",
+      "content": "File edited successfully.",
+      "name": "editFile",
+      "toolCallId": "tc_2",
+      "timestamp": 1710928807000
+    },
+    {
+      "role": "assistant",
+      "content": "Fixed! On screens under 768px, the sidebar now hides completely instead of overlapping.",
+      "timestamp": 1710928808000
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+.git
+node_modules
+src
+tests
+samples
+docs
+*.ts
+tsconfig.json
+vite.config.ts
+vitest.config.ts
+esbuild.ext.mjs
+package.json.bak
+.vscodeignore
+CONTRIBUTING.md
