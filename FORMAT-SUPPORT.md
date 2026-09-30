@@ -56,8 +56,8 @@ If you're running local models (via vLLM, Ollama, LM Studio, etc.) through these
 | **Claude Code** | Not directly (uses Anthropic API) | Use with Anthropic-compatible proxy |
 | **OpenHands** | Yes (any OpenAI-compatible endpoint) | Model name in metrics reflects your local model |
 | **SWE-Agent** | Yes (any OpenAI-compatible endpoint) | Model name in info.model reflects your local model |
-| **Continue.dev** | Yes | *Parser coming soon* |
-| **Cline** | Yes | *Parser coming soon* |
+| **Continue.dev** | Yes | Parser included (test fixtures only so far) |
+| **Cline** | Yes | Parser included (test fixtures only so far) |
 | **Aider** | Yes | *Parser coming soon — lossy format, no structured tool calls* |
 
 ## Feature Availability by Data Quality

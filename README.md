@@ -5,7 +5,7 @@
 [![Web app](https://img.shields.io/badge/web%20app-try%20it-4f8ff7)](https://msdickinson.github.io/ai-timeline/)
 [![VS Code](https://img.shields.io/badge/VS%20Code-extension-007acc?logo=visual-studio-code&logoColor=white)](#vs-code-extension)
 
-**Your AI coding sessions are already saved on your machine. This shows you what's in them.**
+**See what AI coding agents actually do, across one session or a whole benchmark run.**
 
 <p align="center">
   <a href="https://msdickinson.github.io/ai-timeline/"><img alt="AI Timeline dashboard showing the built-in sample: a Claude Code session with a team of subagents" src="assets/hero.png" width="820"/></a>
@@ -13,7 +13,7 @@
 
 Every time you use Claude Code, Cursor, Aider, or Copilot — it saves a full record of everything that happened. Every tool call, every token spent, every file it read, every error it hit. It's all sitting in a folder on your machine right now. You've probably never looked at it.
 
-AI Timeline reads those files and shows you what your AI actually did — timelines, token breakdowns, patterns, and things you'd never see in the chat UI.
+AI Timeline reads those files and shows you what your AI actually did — timelines, token breakdowns, patterns, and things you'd never see in the chat UI. Load one session, or a whole folder from a benchmark run and look for patterns across all of them, compared by model. Using your own agent setup? Add one small parser file (see [Add your own agent](#add-your-own-agent)).
 
 ## 60 seconds. No install.
 
@@ -29,31 +29,36 @@ Everything runs in your browser. Your data never leaves your machine.
 2. **Find wasted work.** "40% of tokens spent after the fix was already done." "Grep called 12 times in a row." You'd never know from the chat UI. AI Timeline surfaces these automatically.
 3. **Understand your token spend.** Per-event breakdown with cache hit rates. See exactly which calls are expensive and which are cached.
 4. **Share sessions with your team.** Export any session as a self-contained HTML file. They open it in a browser — full interactivity, no install. Drop it in Slack, attach it to a PR review.
-5. **See what's hidden.** Claude Code spawns sub-agents you never see in the chat UI — they run in the background and their session files are saved locally. Load the folder and see everything they did. Same for any multi-agent workflow.
+5. **Look across a whole run.** Load every session from a benchmark or eval run at once. The dashboard finds patterns across all of them, compares models side by side, and the table is virtualized so large runs stay scrollable.
+6. **See what's hidden.** Claude Code spawns sub-agents you never see in the chat UI — they run in the background and their session files are saved locally. Load the folder and see everything they did. Same for any multi-agent workflow.
 
 ## Supported Tools
 
-**Tested and stable** — verified with real session data:
+**Tested by hand on real sessions:**
 
 | Tool | Format |
 |------|--------|
-| **Claude Code** | `.jsonl` — richest data: per-event tokens, precise timestamps, tool calls |
-| **Cursor / Windsurf / Trae** | `.vscdb` — SQLite parsed via WebAssembly, no server needed |
-| **Aider** | `.md` — chat history markdown from your project root |
-| **Cline / Roo Code** | `.json` — VSCode extension task history |
-| **GitHub Copilot Chat** | `.json` — workspace storage chat exports |
+| **Claude Code** | `.jsonl`, including subagent sessions: per-event tokens, precise timestamps, tool calls. The built-in sample is one. |
+| **OpenHands** | `.jsonl` trajectories |
 
-**Additional parsers** — unit tested, may need tweaks for edge cases:
+**Lightly tested so far.** Each parser passes its tests against sample files, but hasn't seen many real sessions yet. If your files don't load, please [open an issue](https://github.com/msdickinson/ai-timeline/issues) and attach a redacted sample.
 
 | Tool | Format |
 |------|--------|
-| OpenHands | `.jsonl` |
+| Cursor / Windsurf / Trae | `.vscdb`, SQLite parsed via WebAssembly, no server needed |
+| Aider | `.md`, the chat history markdown in your project root |
+| Cline / Roo Code | `.json`, VS Code extension task history |
+| GitHub Copilot Chat | `.json`, workspace storage chat exports |
 | SWE-Agent | `.traj` |
 | Codex CLI | `.json` / `.jsonl` |
 | Continue.dev | `.json` |
 | Amazon Q | `.json` |
 
-All formats auto-detected on load. Just drop the file.
+All formats auto-detected on load.
+
+### Add your own agent
+
+Running a custom agent setup? Write one parser that turns its log files into AI Timeline's common `Trajectory` type, then register it with one line in [`src/plugins.ts`](src/plugins.ts). Every view works on it straight away. [`src/parsers/vett.ts`](src/parsers/vett.ts) is a real example, written for our own agent harness. Steps are in [`src/parsers/README.md`](src/parsers/README.md) and [CONTRIBUTING.md](CONTRIBUTING.md). Just drop the file.
 
 **Don't see your tool?** The [plugin system](CONTRIBUTING.md) makes adding a parser easy — one file, ~50 lines. Or ask your AI to write it.
 
@@ -132,14 +137,22 @@ See [DEPLOY.md](DEPLOY.md) for the browser requirements (Chrome/Edge for the Fil
 
 ## VS Code extension
 
-Same parsers, same views, but inside VS Code. Open the **AI Timeline** view from the activity bar to browse loaded sessions in a tree, click any to open the full app inline. Builds via `npm run package:ext` to a `.vsix`.
+Same parsers, same views, but inside VS Code. Open the **AI Timeline** view from the activity bar to browse loaded sessions in a tree, and click any to open the full app inline.
+
+**Install:** download the `.vsix` from the [latest release](https://github.com/msdickinson/ai-timeline/releases/latest), then either run
+
+```bash
+code --install-extension ai-timeline-<version>.vsix
+```
+
+or in VS Code open the Extensions view, click `...`, choose **Install from VSIX...** and pick the file. To build it yourself, run `npm run package:ext`.
 
 ## Run locally
 
 ```bash
 git clone https://github.com/msdickinson/ai-timeline.git
 cd ai-timeline
-npm install
+npm ci
 
 # Web app — opens at http://localhost:5173
 npm run dev
