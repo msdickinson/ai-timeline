@@ -178,7 +178,7 @@ CI runs all three on every push (`.github/workflows/ci.yml`).
 
 ## Companion projects
 
-- **VETT** (not yet public) — an AI coding agent harness that runs models against SWE-bench-style tasks. AI Timeline's live source reads its `--live-port` SSE stream and per-instance JSONL events.
+- **VETT** ([github.com/msdickinson/vett](https://github.com/msdickinson/vett)) — an AI coding agent harness that runs models against SWE-bench-style tasks. AI Timeline's live source reads its `--live-port` SSE stream and per-instance JSONL events.
 
 The built-in sample is a real Claude Code session on a small demo repo (`/home/dev/demo-todo`), recorded for this purpose: a lead agent runs a team of seven subagents (features, CLI, tests, docs and two reviewers) in two parallel waves, then fixes what they found.
 
